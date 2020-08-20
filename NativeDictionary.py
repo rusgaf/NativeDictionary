@@ -2,24 +2,43 @@ class NativeDictionary:
     def __init__(self, sz):
         self.size = sz
         self.slots = [None] * self.size
-        self.values = [None] * self.size
+        self.value = [None] * self.size
 
-     def hash_fun(self, key):
-         # в качестве key поступают строки!
-         # всегда возвращает корректный индекс слота
-         return 0
 
-     def is_key(self, key):
-         # возвращает True если ключ имеется,
-         # иначе False
-         return False
+    def hash_fun(self, key):
+        """hash-функция"""
+        p = 0.33
+        summ = 0
+        result = None
 
-     def put(self, key, value):
-         pass
-         # гарантированно записываем 
-         # значение value по ключу key
+        for i in key:
+            summ += ord(i) * p
 
-     def get(self, key):
-         # возвращает value для key, 
-         # или None если ключ не найден
-         return None
+        result = int(summ % self.size)
+        return result
+
+
+    def is_key(self, key):
+        """Поиск ключа"""
+        found_key = False
+
+        if key in self.slots:
+            found_key = True
+
+        return found_key
+
+
+    def put(self, key, value):
+        """Запись значения по ключу"""
+        self.slots[self.hash_fun(key)] = key
+        self.value[self.hash_fun(key)] = value
+
+
+    def get(self, key):
+        """Получение значения по ключу"""
+        found_value = None
+
+        if self.is_key(key):
+            found_value = self.value[self.hash_fun(key)]
+
+        return found_value
